@@ -4,7 +4,7 @@ import "./App.css";
 import UserList from "./Components/UserList";
 import CommentList from "./Components/CommentList";
 
-function App() {
+const App = () => {
   const [issueUrl, setIssueUrl] = useState("");
   const [issue, setIssue] = useState(null);
   const [comments, setComments] = useState([]);
@@ -13,51 +13,47 @@ function App() {
   console.log(issue, comments, users);
 
   const onSubmit = value => {
-    setIssueUrl(value);
+    setIssueUrl(value)
   };
-
+  
+  const doFetch = async (url) => {
+    try {
+      const response = await fetch(url)
+      return await response.json()
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  
   useEffect(() => {
-    const doFetch = async () => {
-      try {
-        const response = await fetch(
-          `https://api.github.com/repos/${issueUrl}`
-        );
-        setIssue(await response.json());
-      } catch (e) {
-        console.error(e);
-      }
-    };
     if (issueUrl) {
-      doFetch();
+      const getIssue = async () => {
+        const issueGetted /** Greg <3 */ = await doFetch(issueUrl)
+        setIssue(issueGetted)
+      }
+      getIssue()
     }
   }, [issueUrl]);
-
+  
   useEffect(() => {
     const getComments = async () => {
-      try {
-        const response = await fetch(issue.comments_url);
-        const commentsList = await response.json();
-
-        const groupComments = [];
+        const commentsList = await doFetch(issue.comments_url)
+        const groupComments = []
         commentsList.forEach(comment => {
-          const lastItem = groupComments.length ? groupComments[groupComments.length - 1] : null;
+          const lastItem = groupComments.length ? groupComments[groupComments.length - 1] : null
           if (!lastItem || lastItem.user.id !== comment.user.id) {
-            groupComments.push(comment);
+            groupComments.push(comment)
           } else {
-            lastItem.body += comment.body;
-            lastItem.date = comment.date;
+            lastItem.body += comment.body
+            lastItem.date = comment.date
           }
         });
-
-        setComments(groupComments);
-      } catch (e) {
-        console.error(e);
-      }
+        setComments(groupComments)
     };
     if (issue) {
-      getComments();
+      getComments()
     }
-  }, [issue]);
+  }, [issue])
 
   useEffect(() => {
     const users = comments.reduce((acc, comment) => {

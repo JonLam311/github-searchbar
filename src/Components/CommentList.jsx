@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import classnames from 'classnames';
 
-function CommentList({ comments }) {
+const CommentList = ({ comments }) => {
   return (
     <ul className="commentList">
       {comments.map((comment, index) => (

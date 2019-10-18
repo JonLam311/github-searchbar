@@ -1,6 +1,6 @@
 import React from 'react';
 
-function UserList({ users }) {
+const UserList = ({ users }) => {
   return (
     <ul>
       {users.map(user => (
