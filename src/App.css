@@ -1,4 +1,36 @@
+* {
+  max-width: 100%;
+  height: auto;
+}
+
 .main {
   display: grid;
   grid-template-columns: 1fr 5fr;
+}
+
+.commentList {
+  margin: 0 10%;
+}
+
+.commentList > li {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.commentItem {
+  width: 100%;
+}
+
+.commentBody {
+  flex-grow: 2;
+}
+
+.commentImage {
+  width: 50px;
+}
+
+.right {
+  order: 2;
 }

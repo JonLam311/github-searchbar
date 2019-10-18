@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchBar from "./Components/SearchBar";
 import "./App.css";
 import UserList from "./Components/UserList";
+import CommentList from "./Components/CommentList";
 
 function App() {
   const [issueUrl, setIssueUrl] = useState("");
@@ -35,7 +36,20 @@ function App() {
     const getComments = async () => {
       try {
         const response = await fetch(issue.comments_url);
-        setComments(await response.json());
+        const commentsList = await response.json();
+
+        const groupComments = [];
+        commentsList.forEach(comment => {
+          const lastItem = groupComments.length ? groupComments[groupComments.length - 1] : null;
+          if (!lastItem || lastItem.user.id !== comment.user.id) {
+            groupComments.push(comment);
+          } else {
+            lastItem.body += comment.body;
+            lastItem.date = comment.date;
+          }
+        });
+
+        setComments(groupComments);
       } catch (e) {
         console.error(e);
       }
@@ -62,6 +76,7 @@ function App() {
       <SearchBar onSubmit={onSubmit} />
       <div className="main">
         <UserList users={users} />
+        <CommentList comments={comments} />
       </div>
     </div>
   );
