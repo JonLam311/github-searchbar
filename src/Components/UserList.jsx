@@ -1,10 +1,15 @@
 import React from 'react';
 
-function UserList() {
+function UserList({ users }) {
   return (
-    <div className="UserList">
-      
-    </div>
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>
+          <img src={user.avatar_url} alt="" width="50"/>
+          <p>{user.login}</p>
+        </li>
+      ))}
+    </ul>
   );
 }
 

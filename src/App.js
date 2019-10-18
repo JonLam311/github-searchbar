@@ -7,7 +7,7 @@ function App() {
   const [issueUrl, setIssueUrl] = useState("");
   const [issue, setIssue] = useState(null);
   const [comments, setComments] = useState([]);
-  const [users, setUsers] = useState(null);
+  const [users, setUsers] = useState([]);
 
   console.log(issue, comments, users);
 
@@ -60,7 +60,9 @@ function App() {
   return (
     <div className="App">
       <SearchBar onSubmit={onSubmit} />
-      <UserList users={[]} />
+      <div className="main">
+        <UserList users={users} />
+      </div>
     </div>
   );
 }
