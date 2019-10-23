@@ -4,56 +4,58 @@ import "./App.css";
 import UserList from "./Components/UserList";
 import CommentList from "./Components/CommentList";
 
+export const ActiveUsersContext = React.createContext();
+
 const App = () => {
   const [issueUrl, setIssueUrl] = useState("");
   const [issue, setIssue] = useState(null);
   const [comments, setComments] = useState([]);
   const [users, setUsers] = useState([]);
 
-  console.log(issue, comments, users);
-
   const onSubmit = value => {
-    setIssueUrl(value)
+    setIssueUrl(value);
   };
-  
-  const doFetch = async (url) => {
+
+  const doFetch = async url => {
     try {
-      const response = await fetch(url)
-      return await response.json()
+      const response = await fetch(url);
+      return await response.json();
     } catch (e) {
       console.error(e);
     }
   };
-  
+
   useEffect(() => {
     if (issueUrl) {
       const getIssue = async () => {
-        const issueGetted /** Greg <3 */ = await doFetch(issueUrl)
-        setIssue(issueGetted)
-      }
-      getIssue()
+        const issueGetted /** Greg <3 */ = await doFetch(issueUrl);
+        setIssue(issueGetted);
+      };
+      getIssue();
     }
   }, [issueUrl]);
-  
+
   useEffect(() => {
     const getComments = async () => {
-        const commentsList = await doFetch(issue.comments_url)
-        const groupComments = []
-        commentsList.forEach(comment => {
-          const lastItem = groupComments.length ? groupComments[groupComments.length - 1] : null
-          if (!lastItem || lastItem.user.id !== comment.user.id) {
-            groupComments.push(comment)
-          } else {
-            lastItem.body += comment.body
-            lastItem.date = comment.date
-          }
-        });
-        setComments(groupComments)
+      const commentsList = await doFetch(issue.comments_url);
+      const groupComments = [];
+      commentsList.forEach(comment => {
+        const lastItem = groupComments.length
+          ? groupComments[groupComments.length - 1]
+          : null;
+        if (!lastItem || lastItem.user.id !== comment.user.id) {
+          groupComments.push(comment);
+        } else {
+          lastItem.body += comment.body;
+          lastItem.date = comment.date;
+        }
+      });
+      setComments(groupComments);
     };
     if (issue) {
-      getComments()
+      getComments();
     }
-  }, [issue])
+  }, [issue]);
 
   useEffect(() => {
     const users = comments.reduce((acc, comment) => {
@@ -70,12 +72,14 @@ const App = () => {
   return (
     <div className="App">
       <SearchBar onSubmit={onSubmit} />
-      <div className="main">
-        <UserList users={users} />
-        <CommentList comments={comments} />
-      </div>
+      <ActiveUsersContext.Provider value="dark">
+        <div className="main">
+          <UserList users={users} />
+          <CommentList comments={comments} />
+        </div>
+      </ActiveUsersContext.Provider>
     </div>
   );
-}
+};
 
 export default App;
