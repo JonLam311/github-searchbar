@@ -1,10 +1,23 @@
 import React, { useContext } from "react";
-import { ActiveUsersContext } from "../App.js";
+import { UnactiveUsersContext } from "../App.js";
 
-const UserList = ({ users, ...props }) => {
-  // const activeUsers = useContext(activeUsersContext);
-  const value = useContext(ActiveUsersContext);
-  console.log(props, value);
+
+const UserList = ({ users }) => {
+  let [unactiveUserIds, setUnactiveUserIds] = useContext(UnactiveUsersContext);
+
+  const handleClick = e => {
+    const userId = parseInt(e.target.id);
+
+    setUnactiveUserIds(
+      unactiveUserIds.includes(userId)
+        ? unactiveUserIds.filter(activeUser => activeUser !== userId)
+        : [
+            ...unactiveUserIds,
+            userId
+          ]
+    );
+  }
+
   return (
     <ul>
       {users.map(user => (
@@ -12,7 +25,8 @@ const UserList = ({ users, ...props }) => {
           <input
             type="checkbox"
             id={user.id}
-            // checked={activeUsers.includes(user.id)}
+            checked={!unactiveUserIds.includes(user.id)}
+            onChange={handleClick}
           ></input>
           <img src={user.avatar_url} alt="" width="50" />
           <p>{user.login}</p>

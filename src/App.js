@@ -4,13 +4,14 @@ import "./App.css";
 import UserList from "./Components/UserList";
 import CommentList from "./Components/CommentList";
 
-export const ActiveUsersContext = React.createContext();
+export const UnactiveUsersContext = React.createContext();
 
 const App = () => {
   const [issueUrl, setIssueUrl] = useState("");
   const [issue, setIssue] = useState(null);
   const [comments, setComments] = useState([]);
   const [users, setUsers] = useState([]);
+  const [unactiveUserIds, setUnactiveUserIds] = useState([]);
 
   const onSubmit = value => {
     setIssueUrl(value);
@@ -72,12 +73,12 @@ const App = () => {
   return (
     <div className="App">
       <SearchBar onSubmit={onSubmit} />
-      <ActiveUsersContext.Provider value="dark">
+      <UnactiveUsersContext.Provider value={[unactiveUserIds, setUnactiveUserIds]}>
         <div className="main">
           <UserList users={users} />
           <CommentList comments={comments} />
         </div>
-      </ActiveUsersContext.Provider>
+      </UnactiveUsersContext.Provider>
     </div>
   );
 };
